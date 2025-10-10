@@ -1,2 +1,2 @@
 # twitter-clone
-Learning to develop and clone a large scaled app like Twitter/X
+Developing a large scaled clone of the app X with user authentication, JWT token storage, Custom API, and more.
