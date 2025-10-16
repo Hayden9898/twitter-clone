@@ -7,7 +7,7 @@ import Notification from "../models/notification.model.js";
 export const getUserProfile = async (req, res) => {
     const {username} = req.params;
     try {
-        const user = await User.findOne({username}).select("-password");
+        let user = await User.findOne({username}).select("-password");
         if(!user){
             res.status(404).json({error: "User not found"});
         }
@@ -95,11 +95,11 @@ export const updateUser = async (req, res) => {
     const userId = req.user._id;
 
     try {
-        const user = await User.findById(userId);
+        let user = await User.findById(userId);
         if(!user) return res.status(404).json({ message: "User not found" });
 
         if((!newPassword && currentPassword) || (newPassword && !currentPassword)){
-            res.stats(400).json({ error: "Pleasse provide both current password and new password"})
+            res.status(400).json({ error: "Pleasse provide both current password and new password"})
         }
 
         if(currentPassword && newPassword){
@@ -141,6 +141,7 @@ export const updateUser = async (req, res) => {
 
         return res.status(200).json(user);
     } catch (error) {
-        
+        comsole.log("Error in updateUser: ", error.message);
+        res.status(500).json({ error: error.message})
     }
 }
