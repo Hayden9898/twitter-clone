@@ -85,12 +85,14 @@ const ProfilePage = () => {
 									type='file'
 									hidden
 									ref={coverImgRef}
+                                    accept="image/*"
 									onChange={(e) => handleImgChange(e, "coverImg")}
 								/>
 								<input
 									type='file'
 									hidden
 									ref={profileImgRef}
+                                    accept="image/*"
 									onChange={(e) => handleImgChange(e, "profileImg")}
 								/>
 								{/* USER AVATAR */}
