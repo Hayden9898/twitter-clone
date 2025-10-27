@@ -19,7 +19,7 @@ const LoginPage = () => {
 		mutationFn: async({ username, password }) => {
 			try {
 				const res = await fetch("api/auth/login", {
-					method: "Post",
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
 					},
@@ -28,7 +28,9 @@ const LoginPage = () => {
 
 				const data = res.json()
 
-				if(!res.ok) throw new Error(data.error || "Incorrect password or email");
+				if(!res.ok){
+					throw new Error(data.error || "Incorrect password or email");
+				}
 				console.log(data)
 
 			} catch (error) {
