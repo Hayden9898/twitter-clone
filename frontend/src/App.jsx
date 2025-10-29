@@ -15,11 +15,15 @@ import LoadingSpinner from "./components/common/LoadingSpinner"
 
 function App() {
   const { data:authUser, isLoading } = useQuery({
+    //query key used to a give a unique name to the query and to refer to it later
     queryKey: ['authUser'],
     queryFn: async() => {
       try {
         const res = await fetch("/api/auth/me");
         const data = await res.json();
+        if(data.error){
+          return null
+        }
         if(!res.ok){
           throw new Error(data.error || "Something went wrong")
         }
@@ -28,7 +32,8 @@ function App() {
       } catch (error) {
         throw new Error(error)
       }
-    }
+    },
+    retry:false
   });
 
   if(isLoading){
@@ -38,11 +43,13 @@ function App() {
       </div>
     )
   }
+
+
   return (
     <>
       <div className='flex max-w-6xl mx-auto'>
         {/* Common component, not wrapped in routes */}
-        <Sidebar /> 
+        { authUser && <Sidebar /> }
         <Routes>
           <Route path='/' element={authUser ? <HomePage /> : <Navigate  to="/login" /> } />
           <Route path='/login' element={!authUser ? <LoginPage />: <Navigate to="/" />} />
@@ -50,7 +57,7 @@ function App() {
           <Route path='/notifications' element={authUser ? <NotificationPage /> : <Navigate to="/login" />} />
           <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         </Routes>
-        <RightPanel />
+        { authUser && <RightPanel />}
         <Toaster />
       </div>
     </>
