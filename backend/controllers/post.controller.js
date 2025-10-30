@@ -88,20 +88,21 @@ export const likeUnlikePost = async(req, res) => {
        const post = await Post.findById(postId);
 
         if(!post){
-            return res.status(404).json({error: "Post not found"})
+            return res.status(404).json({error: "Post not found"});
         }
 
-        const userLikedPost = post.likes.includes(userId)
+        const userLikedPost = post.likes.includes(userId);
         if(userLikedPost){
             //unlike post
-            await Post.updateOne({_id:postId}, {$pull: {likes: userId}})
-            await User.updateOne({_id: userId}, {$pull: {likedPosts: postId}})
+            await Post.updateOne({_id:postId}, {$pull: {likes: userId}});
+            await User.updateOne({_id: userId}, {$pull: {likedPosts: postId}});
 
-            res.status(200).json({message: "Post unliked successfully"})
+            const updatedLikes = post.likes.filter((id) => id.toString() !== userId.toString()) 
+            res.status(200).json(updatedLikes);
         } else {
             //like post
             post.likes.push(userId);
-            await User.updateOne({_id: userId}, {$push: {likedPosts: postId}})
+            await User.updateOne({_id: userId}, {$push: {likedPosts: postId}});
             await post.save();
 
             const notification = new Notification({
@@ -110,7 +111,9 @@ export const likeUnlikePost = async(req, res) => {
                 type: "like"
             })
             await notification.save();
-            res.status(200).json({ message: "Post liked successfully"});
+
+            const updatedLikes = post.likes
+            res.status(200).json(updatedLikes);
         }
     } catch (error) {
         console.log("Error in likeUnlikePost controller: ", error);
