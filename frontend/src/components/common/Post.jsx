@@ -66,14 +66,14 @@ const Post = ({ post }) => {
 			// queryClient.invalidateQueries({ queryKey:["posts"]});
 			
 			//Updates cache instead of refetching
-			queryClient.setQueryData(["posts", (oldData) => {
+			queryClient.setQueryData(["posts"], (oldData) => {
 				return oldData.map(p => {
 					if(p._id === post._id){
 						return {...p,likes:updatedLikes}
 					}
 					return p;
 				})
-			}])
+			});
 		},
 		onError: (error) => {
 			toast.error(error.message);
