@@ -36,7 +36,7 @@ const Post = ({ post }) => {
 			//invalidate query to refetch the data
 			queryClient.invalidateQueries({ queryKey: ["posts"]})
 		}
-	})
+	});
 
 	const {mutate:likePost, isPending:isLiking} = useMutation({
 		mutationFn: async () => {
@@ -71,6 +71,37 @@ const Post = ({ post }) => {
 		onError: (error) => {
 			toast.error(error.message);
 		}
+	});
+	
+	//TODO: handle cache instead of invalidating query on comment
+	const {mutate:commentPost, isPending: isCommenting} = useMutation({
+		mutationFn: async () => {
+			try {
+				const res = await fetch(`/api/posts/comment/${post._id}`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ text:comment }),
+				})
+				const data = await res.json();
+
+				if(!res.ok){
+					throw new Error(data.error || "Something went wrong");
+				}
+				return data;
+			} catch (error) {
+				throw new Error(error)
+			}
+		},
+		onSuccess: () => {
+			toast.success("Comment posted successfully");
+			setComment("");
+			queryClient.invalidateQueries({ queryKey: ["posts"] });
+		},
+		onError: () => {
+			toast.error(error.message);
+		}
 	})
 
 	const postOwner = post.user;
@@ -80,7 +111,6 @@ const Post = ({ post }) => {
 
 	const formattedDate = "1h";
 
-	const isCommenting = false;
 
 	const handleDeletePost = () => {
 		deletePost();
@@ -88,6 +118,8 @@ const Post = ({ post }) => {
 
 	const handlePostComment = (e) => {
 		e.preventDefault();
+		if(isCommenting) return;
+		commentPost();
 	};
 
 	const handleLikePost = () => {
