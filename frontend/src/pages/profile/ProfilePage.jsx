@@ -43,7 +43,7 @@ const ProfilePage = () => {
 		}
 	})
 	const memberSinceDate = formatMemberSinceDate(user?.createdAt);
-	
+
 	const handleImgChange = (e, state) => {
 		const file = e.target.files[0];
 		if (file) {
@@ -207,7 +207,7 @@ const ProfilePage = () => {
 						</>
 					)}
 
-					<Posts />
+					<Posts feedType={feedType} username={username} userId={user?._id}/>
 				</div>
 			</div>
 		</>
