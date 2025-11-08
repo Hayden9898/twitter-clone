@@ -10,7 +10,7 @@ import { POSTS } from "../../utils/db/dummy";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/db/date";
 
 import useFollow from "../../hooks/useFollow";
@@ -28,7 +28,6 @@ const ProfilePage = () => {
 	const {username} = useParams();
 
 	const {follow, isPending} = useFollow();
-	const queryClient = useQueryClient();
 	const {data:authUser} = useQuery({queryKey: ["authUser"]})
 
 	const {data:user, isLoading, refetch, isRefetching} = useQuery({
@@ -147,9 +146,13 @@ const ProfilePage = () => {
 								{(coverImg || profileImg) && (
 									<button
 										className='btn btn-primary rounded-full btn-sm text-white px-4 ml-2'
-										onClick={() => updateProfile({coverImg, profileImg})}
+										onClick={async () => {
+											await updateProfile({ coverImg, profileImg })
+											setProfileImg(null);
+											setCoverImg(null);
+										}}
 									>
-										{isUpdatingProfile ? "Updating...": "Save"}
+										{isUpdatingProfile ? "Updating...": "Update"}
 									</button>
 								)}
 							</div>
@@ -164,15 +167,13 @@ const ProfilePage = () => {
 								<div className='flex gap-2 flex-wrap'>
 									{user?.link && (
 										<div className='flex gap-1 items-center '>
-											<>
-												<a
+											<a
 												href={user.link.startsWith("http") ? user.link : `https://${user.link}`}
 												target='_blank'
 												rel='noreferrer'
 												className='text-sm text-blue-500 hover:underline'
 												>      {user.link.replace(/^https?:\/\//, "")}
-												</a>
-											</>
+											</a>
 										</div>
 									)}
 									<div className='flex gap-2 items-center'>

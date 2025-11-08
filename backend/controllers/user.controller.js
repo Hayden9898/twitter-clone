@@ -114,22 +114,23 @@ export const updateUser = async (req, res) => {
             user.password = await bcrypt.hash(newPassword, salt);
         }
         if (profileImg) {
-            if (user.profileImg && user.profileImg.startsWith("http")) {
-              const publicId = user.profileImg.split("/").pop().split(".")[0];
-              await cloudinary.uploader.destroy(publicId);
-            }
-            const uploadedResponse = await cloudinary.uploader.upload(profileImg);
-            user.profileImg = uploadedResponse.secure_url;
-          }
-          
-          if (coverImg) {
-            if (user.coverImg && user.coverImg.startsWith("http")) {
-              const publicId = user.coverImg.split("/").pop().split(".")[0];
-              await cloudinary.uploader.destroy(publicId);
-            }
-            const uploadedResponse = await cloudinary.uploader.upload(coverImg);
-            user.coverImg = uploadedResponse.secure_url;
-          }
+			if (user.profileImg) {
+				// https://res.cloudinary.com/dyfqon1v6/image/upload/v1712997552/zmxorcxexpdbh8r0bkjb.png
+				await cloudinary.uploader.destroy(user.profileImg.split("/").pop().split(".")[0]);
+			}
+
+			const uploadedResponse = await cloudinary.uploader.upload(profileImg);
+			profileImg = uploadedResponse.secure_url;
+		}
+
+		if (coverImg) {
+			if (user.coverImg) {
+				await cloudinary.uploader.destroy(user.coverImg.split("/").pop().split(".")[0]);
+			}
+
+			const uploadedResponse = await cloudinary.uploader.upload(coverImg);
+			coverImg = uploadedResponse.secure_url;
+		}
           
         user.fullName = fullName || user.fullName;
         user.email = email || user.email;
