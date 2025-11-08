@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-const EditProfileModal = () => {
+const EditProfileModal = ({authUser}) => {
 	const queryClient = useQueryClient();
 	const [formData, setFormData] = useState({
 		fullName: "",
@@ -50,7 +50,19 @@ const EditProfileModal = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-
+	useEffect(() => {
+		if(authUser){
+			setFormData({
+				fullName: authUser.fullName,
+				username: authUser.username,
+				email: authUser.email,
+				bio: authUser.bio,
+				link: authUser.link,
+				newPassword: "",
+				currentPassword: "",
+			})
+		}
+	},[authUser])
 
 	return (
 		<>
