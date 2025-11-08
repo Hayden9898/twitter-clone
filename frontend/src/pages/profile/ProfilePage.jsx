@@ -20,7 +20,7 @@ const ProfilePage = () => {
 
 	const [coverImg, setCoverImg] = useState(null);
 	const [profileImg, setProfileImg] = useState(null);
-	const [feedType, setFeedType] = useState("posts");
+	const [Type, setType] = useState("posts");
 
 	const coverImgRef = useRef(null);
 	const profileImgRef = useRef(null);
@@ -197,19 +197,19 @@ const ProfilePage = () => {
 							<div className='flex w-full border-b border-gray-700 mt-4'>
 								<div
 									className='flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 relative cursor-pointer'
-									onClick={() => setFeedType("posts")}
+									onClick={() => setType("posts")}
 								>
 									Posts
-									{feedType === "posts" && (
+									{Type === "posts" && (
 										<div className='absolute bottom-0 w-10 h-1 rounded-full bg-primary' />
 									)}
 								</div>
 								<div
 									className='flex justify-center flex-1 p-3 text-slate-500 hover:bg-secondary transition duration-300 relative cursor-pointer'
-									onClick={() => setFeedType("likes")}
+									onClick={() => setType("likes")}
 								>
 									Likes
-									{feedType === "likes" && (
+									{Type === "likes" && (
 										<div className='absolute bottom-0 w-10  h-1 rounded-full bg-primary' />
 									)}
 								</div>
@@ -217,7 +217,7 @@ const ProfilePage = () => {
 						</>
 					)}
 
-					<Posts feedType={feedType} username={username} userId={user?._id}/>
+					<Posts Type={Type} username={username} userId={user?._id}/>
 				</div>
 			</div>
 		</>
