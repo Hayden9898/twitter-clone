@@ -87,7 +87,7 @@ npm run dev
 ---
 
 ## 🚧 Coming Soon  
-
+📱 **Mobile Compatibility Enhancements** – Improved responsiveness, Apple Photos (HEIC) upload support  
 💬 **Emoji Bar for Posts** – React with emojis directly on posts  
 🔁 **Post Sharing / Reposting** – Bring retweet-style interactions  
 🤖 **Grok-Style AI Replies** – Generate witty, context-aware AI responses  
@@ -95,6 +95,7 @@ npm run dev
 🧑‍💼 **Admin Dashboard** – Manage reports and moderate users  
 🧠 **Password Reset Flow** – Email-based password recovery  
 📊 **Analytics Dashboard** – Engagement and post tracking  
+
 
 ---
 
