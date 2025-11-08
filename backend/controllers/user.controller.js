@@ -113,21 +113,24 @@ export const updateUser = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(newPassword, salt);
         }
-        if(profileImg){
-            if(user.profileImg){
-                await cloudinary.uploader.destroy(user.profileImg.split("/").pop.split(".")[0]);
+        if (profileImg) {
+            if (user.profileImg && user.profileImg.startsWith("http")) {
+              const publicId = user.profileImg.split("/").pop().split(".")[0];
+              await cloudinary.uploader.destroy(publicId);
             }
-            const uploadedResponse = await cloudinary.uploader.upload(profileImg)
-            profileImg = uploadedResponse.secure_url;
-        }
-
-        if(coverImg){
-            if(user.coverImg){
-                await cloudinary.uploader.destroy(user.coverImg.split("/").pop.split(".")[0]);
+            const uploadedResponse = await cloudinary.uploader.upload(profileImg);
+            user.profileImg = uploadedResponse.secure_url;
+          }
+          
+          if (coverImg) {
+            if (user.coverImg && user.coverImg.startsWith("http")) {
+              const publicId = user.coverImg.split("/").pop().split(".")[0];
+              await cloudinary.uploader.destroy(publicId);
             }
             const uploadedResponse = await cloudinary.uploader.upload(coverImg);
-            coverImg = uploadedResponse.secure_url;
-        }
+            user.coverImg = uploadedResponse.secure_url;
+          }
+          
         user.fullName = fullName || user.fullName;
         user.email = email || user.email;
         user.username = username || user.username;
@@ -142,7 +145,7 @@ export const updateUser = async (req, res) => {
 
         return res.status(200).json(user);
     } catch (error) {
-        comsole.log("Error in updateUser: ", error.message);
+        console.log("Error in updateUser: ", error.message);
         res.status(500).json({ error: error.message})
     }
 }
